@@ -1,1 +1,1 @@
-# Node TypeScript Project Set Up
+# Node Project Starter Implementation
