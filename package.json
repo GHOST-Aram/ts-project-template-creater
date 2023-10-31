@@ -1,0 +1,37 @@
+{
+  "name": "ts-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./build/index.ts",
+  "types": "./build/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./build/index",
+    "nodemon": "nodemon ./src/index.ts",
+    "once": "ts-node ./src/index.ts",
+    "build": "tsc && shx rm -rf build/templates && cp -r src/templates build"
+  },
+  "bin": {
+    "cli-one": "./build/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/ejs": "^3.1.4",
+    "@types/inquirer": "^9.0.6",
+    "@types/node": "^20.8.9",
+    "@types/shelljs": "^0.8.14",
+    "@types/yargs": "^17.0.29",
+    "nodemon": "^3.0.1",
+    "shx": "^0.3.4",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "ejs": "^3.1.9",
+    "inquirer": "^8.2.6",
+    "shelljs": "^0.8.5"
+  }
+}
