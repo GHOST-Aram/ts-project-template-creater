@@ -1,4 +1,4 @@
-import fs, { Stats } from 'fs'
+import fs from 'fs'
 import chalk from 'chalk'
 import path from 'path'
 import * as ejs from 'ejs'
@@ -10,15 +10,28 @@ const SKIP_FILES = ['node_modules', '.template.json']
 
 
 export const createProjectDirectory = (projectPath: string): boolean =>{
-    if(fs.existsSync(projectPath)){
-        console.error(chalk.red('Folder ', projectPath, 
-            + ' exists. Delete or use another name.')
+    if(folderExists(projectPath)){
+        logErrorMessage(
+            `Folder ${projectPath} exists. Delete or use another name.`
         )
-
         return false
+    } else {
+        createDirectory(projectPath)
+        return true
     } 
-     fs.mkdirSync(projectPath)
-     return true
+
+}
+
+const createDirectory = (path: string) : void =>{
+    fs.mkdirSync(path)
+}
+const folderExists = (path: string): boolean =>{
+    return fs.existsSync(path)
+}
+
+const logErrorMessage = (message: string): void =>{
+    console.error(chalk.red(message)
+        )
 }
 
 export const createDirectoryContents = (
@@ -33,17 +46,26 @@ export const createDirectoryContents = (
             )
             const fileDetails = getFileDetails(originFilePath)
 
-            if(SKIP_FILES.includes(file))
+            if(shouldBeSkipped(file))
                 return
-            if(fileDetails.isFile()){
+            if(isFile(fileDetails)){
                 let fileContent = readFileContent(originFilePath)
-                fileContent = render(fileContent, { projectName })
+                fileContent = getRenderedFileContent(fileContent, { projectName })
 
                 pasteFileContent(destinationFilePath, fileContent)
-            } else if (fileDetails.isDirectory()){
+            } else if (isDirectory(fileDetails)){
                 createDirectoryContents(originFilePath, destinationFilePath)
             }
         })
+}
+const isDirectory = (fileDetails: fs.Stats): boolean =>{
+    return fileDetails.isDirectory()
+}
+const isFile = (fileDetails: fs.Stats): boolean =>{
+    return fileDetails.isFile()
+}
+const shouldBeSkipped = (file: string): boolean =>{
+    return SKIP_FILES.includes(file)
 }
  const readDirFiles = (dirPath: string): string[] =>{
     return fs.readdirSync(dirPath)
@@ -57,7 +79,7 @@ export const createDirectoryContents = (
         return path.join( subdirPath, filename)
  }
 
- const getFileDetails = (filePath: string): Stats =>{
+ const getFileDetails = (filePath: string): fs.Stats =>{
     return fs.statSync(filePath)
  }
 
@@ -70,7 +92,7 @@ const readFileContent = (filePath: string): string =>{
     return fs.readFileSync(filePath, 'utf8')
 }
 
-const render = (content: string, data: TemplateData): string =>{
+const getRenderedFileContent = (content: string, data: TemplateData): string =>{
     return ejs.render(content, data)
 }
 
@@ -82,11 +104,10 @@ export const runPostProcess = (options: CliOptions): boolean =>{
     const installationCommand = getCommand(options.projectName)
 
     if(isNode && installationCommand){
-        const projectRootDir = options.targetPath
-        changeDirectory(projectRootDir)
+        changeDirectory(options.targetPath)
         const installationResult = installModules(installationCommand)
         logProcess(installationCommand)
-        if(installationResult.code !== 0){
+        if(!isInstallSuccess(installationResult)){
             console.log(
                 chalk.yellow('Packages installation Failed')
             )
@@ -109,6 +130,9 @@ const getCommand = (projectPath: string): (string | false) => {
     }
 
     return false
+}
+const isInstallSuccess = (installationResult: shell.ShellString): boolean =>{
+    return installationResult.code == 0
 }
 const installModules = (command: string): shell.ShellString =>{
     return shell.exec(command)
