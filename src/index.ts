@@ -3,7 +3,11 @@ import fs from 'fs'
 import path from 'path'
 import inquirer from 'inquirer'
 import { CliOptions } from './interfaces'
-import { createDirectoryContents, createProject, runPostProcess } from './file-system'
+import { 
+    createDirectoryContents, 
+    createProjectDirectory, 
+    runPostProcess 
+} from './file-system'
 import { CURR_DIR } from './file-system'
 
 
@@ -34,9 +38,10 @@ inquirer.prompt(QUESTIONS).then(answers =>{
         targetPath
     }
 
-    console.log(options)
-
-    if(!createProject(targetPath))
+    const isProjectCreated: boolean = createProjectDirectory(
+        targetPath
+    )
+    if(!isProjectCreated)
         return
 
     createDirectoryContents(templatePath, projectName)

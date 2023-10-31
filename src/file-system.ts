@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs, { Stats } from 'fs'
 import chalk from 'chalk'
 import path from 'path'
 import * as ejs from 'ejs'
@@ -9,7 +9,7 @@ export const CURR_DIR = process.cwd()
 const SKIP_FILES = ['node_modules', '.template.json']
 
 
-export const createProject = (projectPath: string) =>{
+export const createProjectDirectory = (projectPath: string): boolean =>{
     if(fs.existsSync(projectPath)){
         console.error(chalk.red('Folder ', projectPath, 
             + ' exists. Delete or use another name.')
@@ -22,7 +22,8 @@ export const createProject = (projectPath: string) =>{
 }
 
 export const createDirectoryContents = (
-    templatePath: string, projectName: string) =>{
+        templatePath: string, projectName: string
+    ): void =>{
         const filesToCreate = readDirFiles(templatePath)
 
         filesToCreate.forEach(file => {
@@ -44,36 +45,36 @@ export const createDirectoryContents = (
             }
         })
 }
- const readDirFiles = (dirPath: string) =>{
+ const readDirFiles = (dirPath: string): string[] =>{
     return fs.readdirSync(dirPath)
  }
 
  const createAbsoluteFilePath = (
         subdirPath: string, filename: string, rootDirPath?:string
-    ) =>{
+    ): string =>{
         if(rootDirPath)
             return path.join(rootDirPath, subdirPath, filename)
         return path.join( subdirPath, filename)
  }
 
- const getFileDetails = (filePath: string) =>{
+ const getFileDetails = (filePath: string): Stats =>{
     return fs.statSync(filePath)
  }
 
-const pasteFileContent = (filePath: string, content: string) =>{
+const pasteFileContent = (filePath: string, content: string): void =>{
     fs.writeFileSync(filePath, content, 'utf8')
 }
 
 
-const readFileContent = (filePath: string) =>{
+const readFileContent = (filePath: string): string =>{
     return fs.readFileSync(filePath, 'utf8')
 }
 
-const render = (content: string, data: TemplateData) =>{
+const render = (content: string, data: TemplateData): string =>{
     return ejs.render(content, data)
 }
 
-export const runPostProcess = (options: CliOptions) =>{
+export const runPostProcess = (options: CliOptions): boolean =>{
     const json_spec_file_path = createAbsoluteFilePath(
         options.targetPath, 'package.json'
     )
@@ -96,7 +97,7 @@ export const runPostProcess = (options: CliOptions) =>{
     return true
 }
 
-const changeDirectory = (path: string) =>{
+const changeDirectory = (path: string): void =>{
     shell.cd(path)
 }
 
@@ -109,34 +110,34 @@ const getCommand = (projectPath: string): (string | false) => {
 
     return false
 }
-const installModules = (command: string) =>{
+const installModules = (command: string): shell.ShellString =>{
     return shell.exec(command)
 }
-const isNodeProject = (packageJsonFilePath: string) => {
+const isNodeProject = (packageJsonFilePath: string):boolean => {
     return fs.existsSync(packageJsonFilePath)
 }
 
-const isNpmPackage = (projectPath: string) =>{
+const isNpmPackage = (projectPath: string): boolean =>{
     const jsonLockFilePath = createAbsoluteFilePath(
         projectPath, 'package-lock.json'
     )
     return fs.existsSync(jsonLockFilePath)
 }
 
-const isYarnPackage = (projectPath: string) =>{
+const isYarnPackage = (projectPath: string): boolean =>{
     const jsonLockFilePath = createAbsoluteFilePath(
         projectPath, 'yarn.lock'
     )
     return fs.existsSync(jsonLockFilePath)
 }
 
-const logProcess = (command: string) =>{
+const logProcess = (command: string): void =>{
     console.log(chalk.blue(
         `Installing node modules using ${command} command`)
     )
 }
 
-export const getCliOptions = (answers: Answer) =>{
+export const getCliOptions = (answers: Answer): CliOptions =>{
     const projectCHoice = answers['template']
     const projectName = answers['name']
     const templatePath = path.join(__dirname, 'templates', projectCHoice)
