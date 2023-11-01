@@ -17,11 +17,11 @@ export class Shell{
         const installationCommand = this.getCommand(projectName)
     
         if(isNode && installationCommand){
-            const installationResult = this.logProcessAndExecuteCommand(
+            const processResult = this.logProcessAndExecuteCommand(
                 installationCommand
             )
 
-            if(!this.isInstallSuccess(installationResult)){
+            if(!this.isInstallSuccess(processResult)){
                 console.log(
                     chalk.yellow('Packages installation Failed')
                 )
@@ -45,9 +45,9 @@ export class Shell{
     
         return false
     }
-    private isInstallSuccess = (installationResult: shell.ShellString): boolean =>{
+    private isInstallSuccess = (processResult: shell.ShellString): boolean =>{
         console.log()
-        return installationResult.code == 0
+        return processResult.code == 0
     }
     private logProcessAndExecuteCommand = (command: string): shell.ShellString =>{
         console.log(chalk.blue(
