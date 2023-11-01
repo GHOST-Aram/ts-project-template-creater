@@ -3,7 +3,6 @@ import chalk from 'chalk'
 import path from 'path'
 import * as ejs from 'ejs'
 import { Answer, CliOptions, TemplateData } from './interfaces'
-import * as shell from 'shelljs'
 import { SKIP_FILES, CURRENT_DIR } from './constants'
 
 
@@ -97,48 +96,7 @@ export class Project{
     private getRenderedFileContent = (content: string, data: TemplateData): string =>{
         return ejs.render(content, data)
     }
-    
-    
-    
-    public changeDirectory = (path: string): void =>{
-        shell.cd(path)
-    }
-    
-    public getCommand = (projectPath: string): (string | false) => {
-        if(this.isNpmPackage(projectPath))
-            return 'npm install'
-        if(this.isYarnPackage(projectPath)){
-            return 'yarn add'
-        }
-    
-        return false
-    }
-    public isInstallSuccess = (installationResult: shell.ShellString): boolean =>{
-        return installationResult.code == 0
-    }
-    public installModules = (command: string): shell.ShellString =>{
-        return shell.exec(command)
-    }
-    public isNodeProject = (packageJsonFilePath: string):boolean => {
-        return fs.existsSync(packageJsonFilePath)
-    }
-    
-    private isNpmPackage = (projectPath: string): boolean =>{
-        const jsonLockFilePath = this.createAbsoluteFilePath(
-            projectPath, 'package-lock.json'
-        )
-        return fs.existsSync(jsonLockFilePath)
-    }
-    
-    private isYarnPackage = (projectPath: string): boolean =>{
-        const jsonLockFilePath = this.createAbsoluteFilePath(
-            projectPath, 'yarn.lock'
-        )
-        return fs.existsSync(jsonLockFilePath)
-    }
-    
-    
-    
+     
     public getCliOptions = (answers: Answer): CliOptions =>{
         const projectCHoice = answers['template']
         const projectName = answers['name']
