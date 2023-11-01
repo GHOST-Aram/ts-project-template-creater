@@ -51,7 +51,7 @@ export class Project{
     
                 if(this.isFile(fileDetails)){
                     let fileContent = this.readFileContent(originFilePath)
-                    fileContent = this.getRenderedFileContent(fileContent, { projectName })
+                    fileContent = this.renderTemplateData(fileContent, { projectName })
     
                     this.pasteFileContent(destinationFilePath, fileContent)
                 } else if (this.isDirectory(fileDetails)){
@@ -96,7 +96,7 @@ export class Project{
     private skip = () =>{
         return
     }
-    private getRenderedFileContent = (content: string, data: TemplateData): string =>{
+    private renderTemplateData = (content: string, data: TemplateData): string =>{
         return ejs.render(content, data)
     }
      
