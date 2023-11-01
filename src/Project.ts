@@ -31,16 +31,15 @@ export class Project{
     }
     
     private logErrorMessage = (message: string): void =>{
-        console.error(chalk.red(message)
-            )
+        console.error(chalk.red(message))
     }
     
     public createDirectoryContents = (
             templatePath: string, projectName: string
         ): void =>{
-            const filesToCreate = this.readDirFiles(templatePath)
+            const template = this.getTemplateFiles(templatePath)
     
-            filesToCreate.forEach(file => {
+            template.forEach(file => {
                 const originFilePath = this.createAbsoluteFilePath(templatePath, file)
                 const destinationFilePath = this.createAbsoluteFilePath(
                     projectName,file, CURRENT_DIR
@@ -68,7 +67,7 @@ export class Project{
     private shouldBeSkipped = (file: string): boolean =>{
         return SKIP_FILES.includes(file)
     }
-    private readDirFiles = (dirPath: string): string[] =>{
+    private getTemplateFiles = (dirPath: string): string[] =>{
         return fs.readdirSync(dirPath)
     }
     
