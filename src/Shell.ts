@@ -9,7 +9,7 @@ export class Shell{
         this.project = project
     }
     public runPostProcess = (targetPath: string, projectName: string): boolean =>{
-        const json_spec_file_path = this.project.createAbsoluteFilePath(
+        const json_spec_file_path = this.project.createFullPathName(
             targetPath, 'package.json'
         )
         const isNode = this.isNodeProject(json_spec_file_path)
@@ -61,14 +61,14 @@ export class Shell{
     }
 
     private isNpmPackage = (projectPath: string): boolean =>{
-        const jsonLockFilePath = this.project.createAbsoluteFilePath(
+        const jsonLockFilePath = this.project.createFullPathName(
             projectPath, 'package-lock.json'
         )
         return fs.existsSync(jsonLockFilePath)
     }
     
     private isYarnPackage = (projectPath: string): boolean =>{
-        const jsonLockFilePath = this.project.createAbsoluteFilePath(
+        const jsonLockFilePath = this.project.createFullPathName(
             projectPath, 'yarn.lock'
         )
         return fs.existsSync(jsonLockFilePath)

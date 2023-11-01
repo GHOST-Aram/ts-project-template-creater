@@ -42,11 +42,11 @@ export class Project{
             if(this.fileShouldBeSkipped(filename)){
                 this.skip()
             } else {
-                const originFilePath = this.createAbsoluteFilePath(templatePath, filename)
+                const originFilePath = this.createFullPathName(templatePath, filename)
                 const fileDetails = this.getFileDetails(originFilePath)
     
                 
-                const destinationFilePath = this.createAbsoluteFilePath(
+                const destinationFilePath = this.createFullPathName(
                     projectName,filename, CURRENT_DIR
                 )
                 if(this.isFile(fileDetails)){
@@ -75,7 +75,7 @@ export class Project{
         return fs.readdirSync(dirPath)
     }
     
-    public createAbsoluteFilePath = (
+    public createFullPathName = (
             subdirPath: string, filename: string, rootDirPath?:string
         ): string =>{
             if(rootDirPath)
