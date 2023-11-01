@@ -10,6 +10,28 @@ export class Shell {
     constructor(project: Project){
         this.project = project
     }
+    public getCommand = (projectPath: string): (string | false) => {
+        if(this.isNpmPackage(projectPath))
+            return 'npm install'
+        if(this.isYarnPackage(projectPath)){
+            return 'yarn add'
+        }
+    
+        return false
+    }
+    private isNpmPackage = (projectPath: string): boolean =>{
+        const jsonLockFilePath = this.project.createFullPathName(
+            projectPath, 'package-lock.json'
+        )
+        return fs.existsSync(jsonLockFilePath)
+    }
+    
+    private isYarnPackage = (projectPath: string): boolean =>{
+        const jsonLockFilePath = this.project.createFullPathName(
+            projectPath, 'yarn.lock'
+        )
+        return fs.existsSync(jsonLockFilePath)
+    }
 
     public runPostProcess = (processVars: ProcessVariables): boolean =>{
         this.changeDirectory(processVars.targetPath)
@@ -39,15 +61,11 @@ export class Shell {
     private changeDirectory = (path: string): void =>{
         shell.cd(path)
     }
-    
-    public getCommand = (projectPath: string): (string | false) => {
-        if(this.isNpmPackage(projectPath))
-            return 'npm install'
-        if(this.isYarnPackage(projectPath)){
-            return 'yarn add'
-        }
-    
-        return false
+    private isNodeProject = (targetPath: string):boolean => {
+        const config_file_path = this.project.createFullPathName(
+            targetPath, 'package.json'
+        )
+        return fs.existsSync(config_file_path)
     }
     private isWorkDone = (processResult: shell.ShellString): boolean =>{
         return processResult.code == 0
@@ -57,25 +75,5 @@ export class Shell {
             `Running ${chalk.gray(command)} command`)
         )
         return shell.exec(command)
-    }
-    private isNodeProject = (targetPath: string):boolean => {
-        const config_file_path = this.project.createFullPathName(
-            targetPath, 'package.json'
-        )
-        return fs.existsSync(config_file_path)
-    }
-
-    private isNpmPackage = (projectPath: string): boolean =>{
-        const jsonLockFilePath = this.project.createFullPathName(
-            projectPath, 'package-lock.json'
-        )
-        return fs.existsSync(jsonLockFilePath)
-    }
-    
-    private isYarnPackage = (projectPath: string): boolean =>{
-        const jsonLockFilePath = this.project.createFullPathName(
-            projectPath, 'yarn.lock'
-        )
-        return fs.existsSync(jsonLockFilePath)
     }
 }
