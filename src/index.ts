@@ -31,4 +31,6 @@ cliInquirer.inquire(QUESTIONS).then(answers =>{
         command: command ? command : false
     }
     shell.runPostProcess(processVars)
-})
+}).catch(error => console.log(
+    'Message: ', error.message,
+))
