@@ -9,6 +9,7 @@ export class Shell{
         this.project = project
     }
     public runPostProcess = (targetPath: string, projectName: string): boolean =>{
+        this.changeDirectory(targetPath)
         const json_spec_file_path = this.project.createFullPathName(
             targetPath, 'package.json'
         )
@@ -16,10 +17,10 @@ export class Shell{
         const installationCommand = this.getCommand(projectName)
     
         if(isNode && installationCommand){
-            this.changeDirectory(targetPath)
-            const installationResult = this.installModules(installationCommand)
+            const installationResult = this.logProcessAndExecuteCommand(
+                installationCommand
+            )
 
-            this.logProcess(installationCommand)
             if(!this.isInstallSuccess(installationResult)){
                 console.log(
                     chalk.yellow('Packages installation Failed')
@@ -29,12 +30,6 @@ export class Shell{
         }
         console.log(chalk.green('Packages installation Success'))
         return true
-    }
-
-    private logProcess = (command: string): void =>{
-        console.log(chalk.blue(
-            `Installing node modules using ${command} command`)
-        )
     }
 
     private changeDirectory = (path: string): void =>{
@@ -51,9 +46,13 @@ export class Shell{
         return false
     }
     private isInstallSuccess = (installationResult: shell.ShellString): boolean =>{
+        console.log()
         return installationResult.code == 0
     }
-    private installModules = (command: string): shell.ShellString =>{
+    private logProcessAndExecuteCommand = (command: string): shell.ShellString =>{
+        console.log(chalk.blue(
+            `Installing node modules using ${command} command`)
+        )
         return shell.exec(command)
     }
     private isNodeProject = (packageJsonFilePath: string):boolean => {
