@@ -43,30 +43,30 @@ export class Project{
                 this.skip()
             } else {
                 const originFilePath = this.createFullPathName(templatePath, filename)
-                const fileDetails = this.getFileDetails(originFilePath)
+                const fileStats = this.getFileStats(originFilePath)
     
                 
                 const destinationFilePath = this.createFullPathName(
                     projectName,filename, CURRENT_DIR
                 )
-                if(this.isFile(fileDetails)){
+                if(this.isFile(fileStats)){
                     const templateData: TemplateData = { projectName }
 
                     const fileContent = this.readFileContent(originFilePath)
                     const fileContentWithTemplateData = this.insertTemplateData(fileContent, templateData)
                     
                     this.writeFileContent(destinationFilePath, fileContentWithTemplateData)
-                } else if (this.isDirectory(fileDetails)){
+                } else if (this.isDirectory(fileStats)){
                     this.createDirectoryContents(originFilePath, destinationFilePath)
                 }
             }
         })
     }
-    private isDirectory = (fileDetails: fs.Stats): boolean =>{
-        return fileDetails.isDirectory()
+    private isDirectory = (fileStats: fs.Stats): boolean =>{
+        return fileStats.isDirectory()
     }
-    private isFile = (fileDetails: fs.Stats): boolean =>{
-        return fileDetails.isFile()
+    private isFile = (fileStats: fs.Stats): boolean =>{
+        return fileStats.isFile()
     }
     private fileShouldBeSkipped = (file: string): boolean =>{
         return SKIP_FILES.includes(file)
@@ -83,7 +83,7 @@ export class Project{
             return path.join( subdirPath, filename)
      }
     
-     private getFileDetails = (filePath: string): fs.Stats =>{
+     private getFileStats = (filePath: string): fs.Stats =>{
         return fs.statSync(filePath)
      }
     
