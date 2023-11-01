@@ -2,7 +2,7 @@ import fs from 'fs'
 import chalk from 'chalk'
 import path from 'path'
 import * as ejs from 'ejs'
-import { Answer, CliOptions, TemplateData } from './interfaces'
+import { Answer, CliOptions, FileInformation, TemplateData } from './interfaces'
 import { SKIP_FILES, CURRENT_DIR } from './constants'
 
 
@@ -42,22 +42,19 @@ export class Project{
             if(this.fileShouldBeSkipped(filename)){
                 this.skip()
             } else {
-                const originFilePath = this.createFullPathName(templatePath, filename)
-                const fileStats = this.getFileStats(originFilePath)
-    
-                
-                const destinationFilePath = this.createFullPathName(
-                    projectName,filename, CURRENT_DIR
+                const fileInfo: FileInformation = this.getFileInformation(
+                    templatePath, projectName, filename
                 )
-                if(this.isFile(fileStats)){
+                
+                if(this.isFile(fileInfo.fileStats)){
                     const templateData: TemplateData = { projectName }
 
-                    const fileContent = this.readFileContent(originFilePath)
+                    const fileContent = this.readFileContent(fileInfo.originPath)
                     const fileContentWithTemplateData = this.insertTemplateData(fileContent, templateData)
                     
-                    this.writeFileContent(destinationFilePath, fileContentWithTemplateData)
-                } else if (this.isDirectory(fileStats)){
-                    this.createDirectoryContents(originFilePath, destinationFilePath)
+                    this.writeFileContent(fileInfo.destinationPath, fileContentWithTemplateData)
+                } else if (this.isDirectory(fileInfo.fileStats)){
+                    this.createDirectoryContents(fileInfo.originPath, fileInfo.destinationPath)
                 }
             }
         })
@@ -70,6 +67,23 @@ export class Project{
     }
     private fileShouldBeSkipped = (file: string): boolean =>{
         return SKIP_FILES.includes(file)
+    }
+    private getFileInformation = (
+        templatePath: string,projectName: string, filename: string
+    ): FileInformation =>{
+        const originFilePath = this.createFullPathName(templatePath, filename)
+        const fileStats = this.getFileStats(originFilePath)
+
+        
+        const destinationFilePath = this.createFullPathName(
+            projectName,filename, CURRENT_DIR
+        )
+
+        return ({
+            originPath: originFilePath,
+            fileStats,
+            destinationPath: destinationFilePath
+        })
     }
     private getTemplateFilesNames = (dirPath: string): string[] =>{
         return fs.readdirSync(dirPath)

@@ -1,3 +1,4 @@
+import { Stats } from "fs"
 export interface CliOptions{
     projectName: string,
     templateName: string,
@@ -19,6 +20,12 @@ export interface Question{
 export interface Answer{
     template: string, 
     name: string
+}
+
+export interface FileInformation{
+    destinationPath: string,
+    originPath: string,
+    fileStats: Stats
 }
 
  
