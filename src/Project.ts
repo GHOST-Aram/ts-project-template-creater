@@ -50,10 +50,11 @@ export class Project{
                     )
     
                 if(this.isFile(fileDetails)){
-                    let fileContent = this.readFileContent(originFilePath)
-                    fileContent = this.renderTemplateData(fileContent, { projectName })
+                    const fileContent = this.readFileContent(originFilePath)
+                    const templateData: TemplateData = { projectName }
+                    const fileContentWithTemplateData = this.renderTemplateData(fileContent, templateData)
     
-                    this.pasteFileContent(destinationFilePath, fileContent)
+                    this.pasteFileContent(destinationFilePath, fileContentWithTemplateData)
                 } else if (this.isDirectory(fileDetails)){
                     this.createDirectoryContents(originFilePath, destinationFilePath)
                 }
