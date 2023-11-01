@@ -36,17 +36,19 @@ export class Project{
     public createDirectoryContents = (
             templatePath: string, projectName: string
         ): void =>{
-            const template = this.getTemplateFiles(templatePath)
-    
-            template.forEach(file => {
+        const template = this.getTemplateFiles(templatePath)
+
+        template.forEach(file => {
+            if(this.fileShouldBeSkipped(file)){
+                this.skip()
+            } else {
                 const originFilePath = this.createAbsoluteFilePath(templatePath, file)
-                const destinationFilePath = this.createAbsoluteFilePath(
-                    projectName,file, CURRENT_DIR
-                )
                 const fileDetails = this.getFileDetails(originFilePath)
     
-                if(this.fileShouldBeSkipped(file))
-                    this.skip()
+                const destinationFilePath = this.createAbsoluteFilePath(
+                    projectName,file, CURRENT_DIR
+                    )
+    
                 if(this.isFile(fileDetails)){
                     let fileContent = this.readFileContent(originFilePath)
                     fileContent = this.getRenderedFileContent(fileContent, { projectName })
@@ -55,7 +57,8 @@ export class Project{
                 } else if (this.isDirectory(fileDetails)){
                     this.createDirectoryContents(originFilePath, destinationFilePath)
                 }
-            })
+            }
+        })
     }
     private isDirectory = (fileDetails: fs.Stats): boolean =>{
         return fileDetails.isDirectory()
