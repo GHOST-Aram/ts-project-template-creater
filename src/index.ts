@@ -11,10 +11,10 @@ cliInquirer.inquire(QUESTIONS).then(answers =>{
 
     const options: CliOptions = cliInquirer.getCLIOptions(answers)
 
-    const isFilesCreated: boolean = project.createProjectDirectory(
+    const mkdirSuccess: boolean = project.createProjectDirectory(
         options.targetPath
     )
-    if(!isFilesCreated){
+    if(!mkdirSuccess){
         return
     } else {
         project.replicateTemplateDirectory(
