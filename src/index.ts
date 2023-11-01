@@ -14,13 +14,13 @@ cliInquirer.inquire(QUESTIONS).then(answers =>{
     const mkdirSuccess: boolean = project.createProjectDirectory(
         options.targetPath
     )
-    if(!mkdirSuccess){
-        return
-    } else {
+    if(mkdirSuccess){
         project.replicateTemplateDirectory(
             options.templatePath, 
             options.projectName
-        )
+            )
+        } else {
+            return
     }
     
 
