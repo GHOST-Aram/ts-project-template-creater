@@ -17,7 +17,7 @@ cliInquirer.inquire(QUESTIONS).then(answers =>{
     if(!isFilesCreated){
         return
     } else {
-        project.createDirectoryContents(
+        project.replicateTemplateDirectory(
             options.templatePath, 
             options.projectName
         )

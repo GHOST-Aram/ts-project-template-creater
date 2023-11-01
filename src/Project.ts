@@ -33,7 +33,7 @@ export class Project{
         console.error(chalk.red(message))
     }
     
-    public createDirectoryContents = (
+    public replicateTemplateDirectory = (
             templatePath: string, projectName: string
         ): void =>{
         const templateFilesNames = this.getTemplateFilesNames(templatePath)
@@ -56,11 +56,11 @@ export class Project{
 
                     const fileContentWithTemplateData = this.readFileAndInsertTemplateData(
                         fileInfo.originPath, templateData
-                    )
-                    
+                    )  
                     this.writeFileContent(fileInfo.destinationPath, fileContentWithTemplateData)
+
                 } else if (this.isDirectory(fileInfo.fileStats)){
-                    this.createDirectoryContents(fileInfo.originPath, fileInfo.destinationPath)
+                    this.replicateTemplateDirectory(fileInfo.originPath, fileInfo.destinationPath)
                 }
             }
         })
