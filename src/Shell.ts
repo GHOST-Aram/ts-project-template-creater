@@ -14,11 +14,11 @@ export class Shell{
             targetPath, 'package.json'
         )
         const isNode = this.isNodeProject(json_spec_file_path)
-        const installationCommand = this.getCommand(projectName)
+        const command = this.getCommand(projectName)
     
-        if(isNode && installationCommand){
+        if(isNode && command){
             const processResult = this.logProcessAndExecuteCommand(
-                installationCommand
+                command
             )
 
             if(!this.isInstallSuccess(processResult)){
