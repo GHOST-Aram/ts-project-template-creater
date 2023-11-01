@@ -36,9 +36,9 @@ export class Project{
     public createDirectoryContents = (
             templatePath: string, projectName: string
         ): void =>{
-        const template = this.getTemplateFiles(templatePath)
+        const templateFiles = this.getTemplateFiles(templatePath)
 
-        template.forEach(file => {
+        templateFiles.forEach(file => {
             if(this.fileShouldBeSkipped(file)){
                 this.skip()
             } else {
