@@ -2,7 +2,7 @@ import fs from 'fs'
 import chalk from 'chalk'
 import path from 'path'
 import * as ejs from 'ejs'
-import { Answer, CliOptions, FileInformation, TemplateData } from './interfaces'
+import { Answer, CliOptions, FileInformation, FileInquiryData, TemplateData } from './interfaces'
 import { SKIP_FILES, CURRENT_DIR } from './constants'
 
 
@@ -42,9 +42,12 @@ export class Project{
             if(this.fileShouldBeSkipped(filename)){
                 this.skip()
             } else {
-                const fileInfo: FileInformation = this.getFileInformation(
-                    templatePath, projectName, filename
-                )
+                const inquiryData: FileInquiryData =  {
+                    templatePath, 
+                    projectName, 
+                    filename
+                }
+                const fileInfo: FileInformation = this.getFileInformation(inquiryData)
                 
                 if(this.isFile(fileInfo.fileStats)){
                     const templateData: TemplateData = { projectName }
@@ -68,15 +71,15 @@ export class Project{
     private fileShouldBeSkipped = (file: string): boolean =>{
         return SKIP_FILES.includes(file)
     }
-    private getFileInformation = (
-        templatePath: string,projectName: string, filename: string
-    ): FileInformation =>{
-        const originFilePath = this.createFullPathName(templatePath, filename)
+    private getFileInformation = ( data: FileInquiryData    ): FileInformation =>{
+        const originFilePath = this.createFullPathName(
+            data.templatePath, data.filename
+            )
         const fileStats = this.getFileStats(originFilePath)
 
         
         const destinationFilePath = this.createFullPathName(
-            projectName,filename, CURRENT_DIR
+            data.projectName,data.filename, CURRENT_DIR
         )
 
         return ({

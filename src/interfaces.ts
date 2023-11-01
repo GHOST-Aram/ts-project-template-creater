@@ -28,4 +28,10 @@ export interface FileInformation{
     fileStats: Stats
 }
 
+export interface FileInquiryData{
+    templatePath: string, 
+    projectName: string, 
+    filename: string
+}
+
  
