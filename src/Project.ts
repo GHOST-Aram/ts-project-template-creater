@@ -47,13 +47,16 @@ export class Project{
                     projectName, 
                     filename
                 }
-                const fileInfo: FileInformation = this.getFileInformation(inquiryData)
+                const fileInfo: FileInformation = this.getFileInformation(
+                    inquiryData
+                )
                 
                 if(this.isFile(fileInfo.fileStats)){
                     const templateData: TemplateData = { projectName }
 
-                    const fileContent = this.readFileContent(fileInfo.originPath)
-                    const fileContentWithTemplateData = this.insertTemplateData(fileContent, templateData)
+                    const fileContentWithTemplateData = this.readFileAndInsertTemplateData(
+                        fileInfo.originPath, templateData
+                    )
                     
                     this.writeFileContent(fileInfo.destinationPath, fileContentWithTemplateData)
                 } else if (this.isDirectory(fileInfo.fileStats)){
@@ -109,14 +112,16 @@ export class Project{
     }
     
     
-    private readFileContent = (filePath: string): string =>{
-        return fs.readFileSync(filePath, 'utf8')
-    }
     private skip = () =>{
         return
     }
-    private insertTemplateData = (content: string, data: TemplateData): string =>{
-        return ejs.render(content, data)
+    private readFileAndInsertTemplateData = (
+        originPath: string, data: TemplateData
+    ): string =>{
+        const content = fs.readFileSync(originPath, 'utf8')
+        const contentWithTemplateData = ejs.render(content, data)
+
+        return contentWithTemplateData
     }
      
     public getCliOptions = (answers: Answer): CliOptions =>{
