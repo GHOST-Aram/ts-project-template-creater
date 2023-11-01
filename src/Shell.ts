@@ -10,10 +10,10 @@ export class Shell{
     }
     public runPostProcess = (targetPath: string, projectName: string): boolean =>{
         this.changeDirectory(targetPath)
-        const json_spec_file_path = this.project.createFullPathName(
+        const config_file_path = this.project.createFullPathName(
             targetPath, 'package.json'
         )
-        const isNode = this.isNodeProject(json_spec_file_path)
+        const isNode = this.isNodeProject(config_file_path)
         const command = this.getCommand(projectName)
     
         if(isNode && command){
