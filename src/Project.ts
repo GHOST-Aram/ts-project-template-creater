@@ -4,9 +4,9 @@ import path from 'path'
 import * as ejs from 'ejs'
 import { Answer, CliOptions, TemplateData } from './interfaces'
 import * as shell from 'shelljs'
+import { SKIP_FILES, CURRENT_DIR } from './constants'
 
-export const CURR_DIR = process.cwd()
-const SKIP_FILES = ['node_modules', '.template.json']
+
 
 export class Project{
     
@@ -43,7 +43,7 @@ export class Project{
             filesToCreate.forEach(file => {
                 const originFilePath = this.createAbsoluteFilePath(templatePath, file)
                 const destinationFilePath = this.createAbsoluteFilePath(
-                    projectName,file, CURR_DIR
+                    projectName,file, CURRENT_DIR
                 )
                 const fileDetails = this.getFileDetails(originFilePath)
     
@@ -142,7 +142,7 @@ export class Project{
         const projectCHoice = answers['template']
         const projectName = answers['name']
         const templatePath = path.join(__dirname, 'templates', projectCHoice)
-        const targetPath = path.join(CURR_DIR, projectName)
+        const targetPath = path.join(CURRENT_DIR, projectName)
         
         const options: CliOptions = {
             projectName,
