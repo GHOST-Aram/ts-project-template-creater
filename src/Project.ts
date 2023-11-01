@@ -47,7 +47,7 @@ export class Project{
                 const fileDetails = this.getFileDetails(originFilePath)
     
                 if(this.fileShouldBeSkipped(file))
-                    return
+                    this.skip()
                 if(this.isFile(fileDetails)){
                     let fileContent = this.readFileContent(originFilePath)
                     fileContent = this.getRenderedFileContent(fileContent, { projectName })
@@ -91,7 +91,9 @@ export class Project{
     private readFileContent = (filePath: string): string =>{
         return fs.readFileSync(filePath, 'utf8')
     }
-    
+    private skip = () =>{
+        return
+    }
     private getRenderedFileContent = (content: string, data: TemplateData): string =>{
         return ejs.render(content, data)
     }
