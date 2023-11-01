@@ -1,7 +1,7 @@
 import { Answer, Question } from "./interfaces"
 import path from "path"
 import { CliOptions } from "./interfaces"
-import { CURRENT_DIR } from "./constants"
+import { CURRENT_DIR } from "./config"
 import inquirer from "inquirer"
 
 export class CLIInquirer{

@@ -3,12 +3,17 @@ import chalk from 'chalk'
 import path from 'path'
 import * as ejs from 'ejs'
 import { Answer, CliOptions, FileInformation, FileInquiryData, TemplateData } from './interfaces'
-import { SKIP_FILES, CURRENT_DIR } from './constants'
 
 
 
 export class Project{
-    
+    private  FILES_TO_SKIP: string[]
+    private CURRENT_DIRECTORY: string
+
+    constructor(filesToSkip: string[], currentDirectory: string){
+        this.CURRENT_DIRECTORY = currentDirectory
+        this.FILES_TO_SKIP = filesToSkip
+    }
     public createProjectDirectory = (projectPath: string): boolean =>{
         if(this.folderExists(projectPath)){
             this.logErrorMessage(
@@ -72,7 +77,7 @@ export class Project{
         return fileStats.isFile()
     }
     private fileShouldBeSkipped = (file: string): boolean =>{
-        return SKIP_FILES.includes(file)
+        return this.FILES_TO_SKIP.includes(file)
     }
     private getFileInformation = ( data: FileInquiryData    ): FileInformation =>{
         const originFilePath = this.createFullPathName(
@@ -82,7 +87,7 @@ export class Project{
 
         
         const destinationFilePath = this.createFullPathName(
-            data.projectName,data.filename, CURRENT_DIR
+            data.projectName,data.filename, this.CURRENT_DIRECTORY
         )
 
         return ({
@@ -128,7 +133,7 @@ export class Project{
         const projectCHoice = answers['template']
         const projectName = answers['name']
         const templatePath = path.join(__dirname, 'templates', projectCHoice)
-        const targetPath = path.join(CURRENT_DIR, projectName)
+        const targetPath = path.join(this.CURRENT_DIRECTORY, projectName)
         
         const options: CliOptions = {
             projectName,
@@ -140,5 +145,3 @@ export class Project{
         return options
     }
 }
-
-export const project = new Project()

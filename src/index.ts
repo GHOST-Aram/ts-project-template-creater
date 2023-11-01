@@ -1,16 +1,17 @@
 #! /usr/bin/env node
 import { CliOptions, ProcessVariables } from './interfaces'
-import { project } from './Project'
+import { Project } from './Project'
 import { Shell } from './Shell'
-import { QUESTIONS } from './constants'
+import { CURRENT_DIR, QUESTIONS, SKIP_FILES } from './config'
 import { cliInquirer } from './CLIInquirer'
 
 
 
 cliInquirer.inquire(QUESTIONS).then(answers =>{
-
+    
     const options: CliOptions = cliInquirer.getCLIOptions(answers)
-
+    
+    const project = new Project(SKIP_FILES, CURRENT_DIR)
     const mkdirSuccess: boolean = project.createProjectDirectory(
         options.targetPath
     )
