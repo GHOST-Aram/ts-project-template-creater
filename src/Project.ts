@@ -8,7 +8,7 @@ import * as shell from 'shelljs'
 export const CURR_DIR = process.cwd()
 const SKIP_FILES = ['node_modules', '.template.json']
 
-export class FileSystem{
+export class Project{
     
     public createProjectDirectory = (projectPath: string): boolean =>{
         if(this.folderExists(projectPath)){
@@ -68,11 +68,11 @@ export class FileSystem{
     private shouldBeSkipped = (file: string): boolean =>{
         return SKIP_FILES.includes(file)
     }
-     private readDirFiles = (dirPath: string): string[] =>{
+    private readDirFiles = (dirPath: string): string[] =>{
         return fs.readdirSync(dirPath)
-     }
+    }
     
-     private createAbsoluteFilePath = (
+    public createAbsoluteFilePath = (
             subdirPath: string, filename: string, rootDirPath?:string
         ): string =>{
             if(rootDirPath)
@@ -97,33 +97,13 @@ export class FileSystem{
         return ejs.render(content, data)
     }
     
-    public runPostProcess = (options: CliOptions): boolean =>{
-        const json_spec_file_path = this.createAbsoluteFilePath(
-            options.targetPath, 'package.json'
-        )
-        const isNode = this.isNodeProject(json_spec_file_path)
-        const installationCommand = this.getCommand(options.projectName)
     
-        if(isNode && installationCommand){
-            this.changeDirectory(options.targetPath)
-            const installationResult = this.installModules(installationCommand)
-            this.logProcess(installationCommand)
-            if(!this.isInstallSuccess(installationResult)){
-                console.log(
-                    chalk.yellow('Packages installation Failed')
-                )
-                return false
-            }
-        }
-        console.log(chalk.green('Packages installation Success'))
-        return true
-    }
     
-    private changeDirectory = (path: string): void =>{
+    public changeDirectory = (path: string): void =>{
         shell.cd(path)
     }
     
-    private getCommand = (projectPath: string): (string | false) => {
+    public getCommand = (projectPath: string): (string | false) => {
         if(this.isNpmPackage(projectPath))
             return 'npm install'
         if(this.isYarnPackage(projectPath)){
@@ -132,13 +112,13 @@ export class FileSystem{
     
         return false
     }
-    private isInstallSuccess = (installationResult: shell.ShellString): boolean =>{
+    public isInstallSuccess = (installationResult: shell.ShellString): boolean =>{
         return installationResult.code == 0
     }
-    private installModules = (command: string): shell.ShellString =>{
+    public installModules = (command: string): shell.ShellString =>{
         return shell.exec(command)
     }
-    private isNodeProject = (packageJsonFilePath: string):boolean => {
+    public isNodeProject = (packageJsonFilePath: string):boolean => {
         return fs.existsSync(packageJsonFilePath)
     }
     
@@ -156,11 +136,7 @@ export class FileSystem{
         return fs.existsSync(jsonLockFilePath)
     }
     
-    private logProcess = (command: string): void =>{
-        console.log(chalk.blue(
-            `Installing node modules using ${command} command`)
-        )
-    }
+    
     
     public getCliOptions = (answers: Answer): CliOptions =>{
         const projectCHoice = answers['template']
@@ -179,4 +155,4 @@ export class FileSystem{
     }
 }
 
-export const filSystem = new FileSystem()
+export const project = new Project()

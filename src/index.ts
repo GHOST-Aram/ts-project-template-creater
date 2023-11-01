@@ -3,8 +3,9 @@ import fs from 'fs'
 import path from 'path'
 import inquirer from 'inquirer'
 import { CliOptions } from './interfaces'
-import { filSystem } from './file-system'
-import { CURR_DIR } from './file-system'
+import { project } from './Project'
+import { CURR_DIR } from './Project'
+import { Shell } from './Shell'
 
 
 const CHOICES = fs.readdirSync(path.join(__dirname, 'templates'))
@@ -34,12 +35,14 @@ inquirer.prompt(QUESTIONS).then(answers =>{
         targetPath
     }
 
-    const isProjectCreated: boolean = filSystem.createProjectDirectory(
+    const isProjectCreated: boolean = project.createProjectDirectory(
         targetPath
     )
     if(!isProjectCreated)
         return
 
-    filSystem.createDirectoryContents(templatePath, projectName)
-    filSystem.runPostProcess(options)
+    project.createDirectoryContents(templatePath, projectName)
+
+    const shell = new Shell(project)
+    shell.runPostProcess(options.targetPath, options.projectName)
 })

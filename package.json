@@ -12,7 +12,7 @@
     "build": "tsc && shx rm -rf build/templates && cp -r src/templates build"
   },
   "bin": {
-    "cli-one": "./build/index.js"
+    "start-project": "./build/index.js"
   },
   "keywords": [],
   "author": "",
