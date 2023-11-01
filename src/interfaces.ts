@@ -34,4 +34,9 @@ export interface FileInquiryData{
     filename: string
 }
 
+export interface ProcessVariables{
+    targetPath: string, 
+    command: string | false
+}
+
  

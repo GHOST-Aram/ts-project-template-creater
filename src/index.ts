@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-import { CliOptions } from './interfaces'
+import { CliOptions, ProcessVariables } from './interfaces'
 import { project } from './Project'
 import { Shell } from './Shell'
 import { QUESTIONS } from './constants'
@@ -25,5 +25,10 @@ cliInquirer.inquire(QUESTIONS).then(answers =>{
     
 
     const shell = new Shell(project)
-    shell.runPostProcess(options.targetPath, options.projectName)
+    const command = shell.getCommand(options.projectName)
+    const processVars: ProcessVariables = {
+        targetPath: options.targetPath,
+        command: command ? command : false
+    }
+    shell.runPostProcess(processVars)
 })
