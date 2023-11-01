@@ -54,7 +54,7 @@ export class Project{
                     const fileContent = this.readFileContent(originFilePath)
                     const fileContentWithTemplateData = this.insertTemplateData(fileContent, templateData)
                     
-                    this.pasteFileContent(destinationFilePath, fileContentWithTemplateData)
+                    this.writeFileContent(destinationFilePath, fileContentWithTemplateData)
                 } else if (this.isDirectory(fileDetails)){
                     this.createDirectoryContents(originFilePath, destinationFilePath)
                 }
@@ -86,7 +86,7 @@ export class Project{
         return fs.statSync(filePath)
      }
     
-    private pasteFileContent = (filePath: string, content: string): void =>{
+    private writeFileContent = (filePath: string, content: string): void =>{
         fs.writeFileSync(filePath, content, 'utf8')
     }
     
