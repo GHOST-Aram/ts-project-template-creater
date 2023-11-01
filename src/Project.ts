@@ -45,15 +45,15 @@ export class Project{
                 const originFilePath = this.createAbsoluteFilePath(templatePath, file)
                 const fileDetails = this.getFileDetails(originFilePath)
     
+                
                 const destinationFilePath = this.createAbsoluteFilePath(
                     projectName,file, CURRENT_DIR
-                    )
-    
+                )
                 if(this.isFile(fileDetails)){
-                    const fileContent = this.readFileContent(originFilePath)
                     const templateData: TemplateData = { projectName }
-                    const fileContentWithTemplateData = this.renderTemplateData(fileContent, templateData)
-    
+                    const fileContent = this.readFileContent(originFilePath)
+                    const fileContentWithTemplateData = this.insertTemplateData(fileContent, templateData)
+                    
                     this.pasteFileContent(destinationFilePath, fileContentWithTemplateData)
                 } else if (this.isDirectory(fileDetails)){
                     this.createDirectoryContents(originFilePath, destinationFilePath)
@@ -97,7 +97,7 @@ export class Project{
     private skip = () =>{
         return
     }
-    private renderTemplateData = (content: string, data: TemplateData): string =>{
+    private insertTemplateData = (content: string, data: TemplateData): string =>{
         return ejs.render(content, data)
     }
      
