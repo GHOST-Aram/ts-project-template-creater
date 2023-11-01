@@ -36,21 +36,22 @@ export class Project{
     public createDirectoryContents = (
             templatePath: string, projectName: string
         ): void =>{
-        const templateFiles = this.getTemplateFiles(templatePath)
+        const templateFilesNames = this.getTemplateFilesNames(templatePath)
 
-        templateFiles.forEach(file => {
-            if(this.fileShouldBeSkipped(file)){
+        templateFilesNames.forEach(filename => {
+            if(this.fileShouldBeSkipped(filename)){
                 this.skip()
             } else {
-                const originFilePath = this.createAbsoluteFilePath(templatePath, file)
+                const originFilePath = this.createAbsoluteFilePath(templatePath, filename)
                 const fileDetails = this.getFileDetails(originFilePath)
     
                 
                 const destinationFilePath = this.createAbsoluteFilePath(
-                    projectName,file, CURRENT_DIR
+                    projectName,filename, CURRENT_DIR
                 )
                 if(this.isFile(fileDetails)){
                     const templateData: TemplateData = { projectName }
+
                     const fileContent = this.readFileContent(originFilePath)
                     const fileContentWithTemplateData = this.insertTemplateData(fileContent, templateData)
                     
@@ -70,7 +71,7 @@ export class Project{
     private fileShouldBeSkipped = (file: string): boolean =>{
         return SKIP_FILES.includes(file)
     }
-    private getTemplateFiles = (dirPath: string): string[] =>{
+    private getTemplateFilesNames = (dirPath: string): string[] =>{
         return fs.readdirSync(dirPath)
     }
     
