@@ -46,7 +46,7 @@ export class Project{
                 )
                 const fileDetails = this.getFileDetails(originFilePath)
     
-                if(this.shouldBeSkipped(file))
+                if(this.fileShouldBeSkipped(file))
                     return
                 if(this.isFile(fileDetails)){
                     let fileContent = this.readFileContent(originFilePath)
@@ -64,7 +64,7 @@ export class Project{
     private isFile = (fileDetails: fs.Stats): boolean =>{
         return fileDetails.isFile()
     }
-    private shouldBeSkipped = (file: string): boolean =>{
+    private fileShouldBeSkipped = (file: string): boolean =>{
         return SKIP_FILES.includes(file)
     }
     private getTemplateFiles = (dirPath: string): string[] =>{
