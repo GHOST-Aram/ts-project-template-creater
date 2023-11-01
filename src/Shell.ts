@@ -50,7 +50,6 @@ export class Shell {
         return false
     }
     private isWorkDone = (processResult: shell.ShellString): boolean =>{
-        console.log()
         return processResult.code == 0
     }
     private logProcessAndExecuteCommand = (command: string): shell.ShellString =>{
