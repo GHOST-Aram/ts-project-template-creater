@@ -1,7 +1,4 @@
 #! /usr/bin/env node
-import fs from 'fs'
-import path from 'path'
-import inquirer from 'inquirer'
 import { CliOptions } from './interfaces'
 import { project } from './Project'
 import { Shell } from './Shell'
