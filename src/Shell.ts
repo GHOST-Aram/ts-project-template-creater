@@ -36,7 +36,8 @@ export class Shell {
     public installPackages = (command: string|false): boolean =>{
         let isWorkDone = false
         if(command){
-            const processResult = this.logProcessAndExecuteCommand(command)
+            this.logProcess(`Running ${chalk.gray(command)} command`)
+            const processResult = this.executeCommand(command)
             isWorkDone = this.isWorkDone(processResult)
         } else{
             return false
@@ -57,14 +58,16 @@ export class Shell {
     private isWorkDone = (processResult: shell.ShellString): boolean =>{
         return processResult.code == 0
     }
-    private logProcessAndExecuteCommand = (command: string): shell.ShellString =>{
-        console.log(chalk.blue(
-            `Running ${chalk.gray(command)} command`)
-        )
+    private executeCommand = (command: string): shell.ShellString =>{
         return shell.exec(command)
+    }
+    private logProcess = (message: string) =>{
+        console.log(chalk.blue(message)
+        )
     }
     public logWarning(message: string){
         console.log(chalk.yellow(message)
         )
     }
+
 }
