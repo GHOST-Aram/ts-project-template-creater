@@ -3,7 +3,7 @@ export class FileSys{
     public createDirectory = (path: string) : void =>{
         fs.mkdirSync(path)
     }
-    public folderExists = (path: string): boolean =>{
+    public fileOrFolderExists = (path: string): boolean =>{
         return fs.existsSync(path)
     }
     public getFileStats = (filePath: string): fs.Stats =>{

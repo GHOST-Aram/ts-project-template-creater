@@ -16,7 +16,7 @@ export class Project extends FileSys{
         this.FILES_TO_SKIP = filesToSkip
     }
     public createProjectDirectory = (projectPath: string): boolean =>{
-        if(this.folderExists(projectPath)){
+        if(this.fileOrFolderExists(projectPath)){
             this.logErrorMessage(
                 `Folder ${projectPath} exists. Delete or use another name.`
             )
@@ -137,19 +137,19 @@ export class Project extends FileSys{
         const jsonLockFilePath = this.createFullPathName(
             projectPath, 'package-lock.json'
         )
-        return this.folderExists(jsonLockFilePath)
+        return this.fileOrFolderExists(jsonLockFilePath)
     }
     
     private isYarnPackage = (projectPath: string): boolean =>{
         const jsonLockFilePath = this.createFullPathName(
             projectPath, 'yarn.lock'
         )
-        return this.folderExists(jsonLockFilePath)
+        return this.fileOrFolderExists(jsonLockFilePath)
     }
     public isNodeProject = (targetPath: string):boolean => {
         const config_file_path = this.createFullPathName(
             targetPath, 'package.json'
         )
-        return this.folderExists(config_file_path)
+        return this.fileOrFolderExists(config_file_path)
     }
 }
