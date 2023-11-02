@@ -37,17 +37,20 @@ export class Shell {
         let isWorkDone = false
         if(command){
             this.logProcess(`Running ${chalk.gray(command)} command`)
+            
             const processResult = this.executeCommand(command)
             isWorkDone = this.isWorkDone(processResult)
         } else{
             return false
         }
 
-        if(!isWorkDone){
-            console.log(chalk.green('Process Complete.Packages installation Success'))
+        if(isWorkDone){
+            this.logSuccess(
+                'Process Complete.Packages installation Success'
+            )
             return true
         } else{
-            console.log(chalk.white('Process Complete.No package installed'))
+            this.logMessage('Process Complete.No package installed')
             return false   
         }     
     }
@@ -64,6 +67,12 @@ export class Shell {
     private logProcess = (message: string) =>{
         console.log(chalk.blue(message)
         )
+    }
+    private logSuccess = (message: String) =>{
+        console.log(chalk.green(message))
+    }
+    private logMessage = (message: string) =>{
+        console.log(chalk.white(message))
     }
     public logWarning(message: string){
         console.log(chalk.yellow(message)
