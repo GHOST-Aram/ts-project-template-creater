@@ -124,6 +124,28 @@ export class Project extends FileSys{
     
         return options
     }
+    public getInstallationCommand = (projectPath: string): (string | false) => {
+        if(this.isNpmPackage(projectPath))
+            return 'npm install'
+        if(this.isYarnPackage(projectPath)){
+            return 'yarn add'
+        }
+    
+        return false
+    }
+    private isNpmPackage = (projectPath: string): boolean =>{
+        const jsonLockFilePath = this.createFullPathName(
+            projectPath, 'package-lock.json'
+        )
+        return this.folderExists(jsonLockFilePath)
+    }
+    
+    private isYarnPackage = (projectPath: string): boolean =>{
+        const jsonLockFilePath = this.createFullPathName(
+            projectPath, 'yarn.lock'
+        )
+        return this.folderExists(jsonLockFilePath)
+    }
     public isNodeProject = (targetPath: string):boolean => {
         const config_file_path = this.createFullPathName(
             targetPath, 'package.json'

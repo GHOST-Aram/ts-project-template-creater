@@ -10,29 +10,6 @@ export class Shell {
     constructor(project: Project){
         this.project = project
     }
-    public getInstallationCommand = (projectPath: string): (string | false) => {
-        if(this.isNpmPackage(projectPath))
-            return 'npm install'
-        if(this.isYarnPackage(projectPath)){
-            return 'yarn add'
-        }
-    
-        return false
-    }
-    private isNpmPackage = (projectPath: string): boolean =>{
-        const jsonLockFilePath = this.project.createFullPathName(
-            projectPath, 'package-lock.json'
-        )
-        return fs.existsSync(jsonLockFilePath)
-    }
-    
-    private isYarnPackage = (projectPath: string): boolean =>{
-        const jsonLockFilePath = this.project.createFullPathName(
-            projectPath, 'yarn.lock'
-        )
-        return fs.existsSync(jsonLockFilePath)
-    }
-
     public installPackages = (command: string|false): boolean =>{
         let isWorkDone = false
         if(command){

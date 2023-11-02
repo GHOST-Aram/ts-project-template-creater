@@ -27,7 +27,7 @@ cliInquirer.inquire(configs.QUESTIONS).then(answers =>{
     const shell = new Shell(project)
     
     if(project.isNodeProject(options.targetPath)){
-        const command = shell.getInstallationCommand(options.projectName)
+        const command = project.getInstallationCommand(options.projectName)
         
         shell.changeDirectory(options.targetPath)
         shell.installPackages(command)
