@@ -5,11 +5,7 @@ import chalk from "chalk"
 import { ProcessVariables } from "./interfaces"
 
 export class Shell {
-    private project: Project
 
-    constructor(project: Project){
-        this.project = project
-    }
     public installPackages = (command: string|false): boolean =>{
         let isWorkDone = false
         if(command){
@@ -22,9 +18,7 @@ export class Shell {
         }
 
         if(isWorkDone){
-            this.logSuccess(
-                'Process Complete.Happy Coding'
-            )
+            this.logSuccess('Process Complete.Happy Coding')
             return true
         } else{
             this.logMessage('Process broken before completion')

@@ -25,7 +25,7 @@ cliInquirer.inquireOptions(configs.QUESTIONS).then(answers =>{
         return
     }
     
-    const shell = new Shell(project)
+    const shell = new Shell()
     
     if(project.isNodeProject(options.targetPath)){
         const command = project.selectInstallationCommand(options.projectName)
