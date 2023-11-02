@@ -9,10 +9,12 @@ export class CLIInquirer{
     public inquire = async(questions: Question[]) =>{
         return await inquirer.prompt(questions)
     }
-    public getCLIOptions = (cliArgs: Answer): CliOptions =>{
+    public createCLIOptions = (cliArgs: Answer): CliOptions =>{
         const projectCHoice = cliArgs['template']
         const projectName = cliArgs['name']
-        const templatePath = path.join(__dirname, 'templates', projectCHoice)
+        const templatePath = path.join(
+            __dirname, 'templates', projectCHoice
+        )
         const targetPath = path.join(CURRENT_DIR, projectName)
 
         const options: CliOptions = {
