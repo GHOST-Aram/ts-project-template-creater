@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-import { CliOptions, ProcessVariables } from './interfaces'
+import { CliOptions } from './interfaces'
 import { Project } from './Project'
 import { Shell } from './Shell'
 import * as configs from './config'
@@ -25,12 +25,18 @@ cliInquirer.inquire(configs.QUESTIONS).then(answers =>{
     }
     
     const shell = new Shell(project)
-    const command = shell.getCommand(options.projectName)
-    const processVars: ProcessVariables = {
-        targetPath: options.targetPath,
-        command: command ? command : false
+    const command = shell.getInstallationCommand(options.projectName)
+    
+    shell.changeDirectory(options.projectName)
+
+    if(project.isNodeProject(options.targetPath)){
+        shell.installPackages(command)
+    } else {
+        shell.logWarning(
+            'Unknown Project Specification.Packages installation skipped'
+        )
     }
-    shell.runPostProcess(processVars)
+    return
 }).catch(error => console.log(
     'Message: ', error.message,
 ))

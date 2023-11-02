@@ -10,7 +10,7 @@ export class Shell {
     constructor(project: Project){
         this.project = project
     }
-    public getCommand = (projectPath: string): (string | false) => {
+    public getInstallationCommand = (projectPath: string): (string | false) => {
         if(this.isNpmPackage(projectPath))
             return 'npm install'
         if(this.isYarnPackage(projectPath)){
@@ -33,39 +33,26 @@ export class Shell {
         return fs.existsSync(jsonLockFilePath)
     }
 
-    public runPostProcess = (processVars: ProcessVariables): boolean =>{
-        this.changeDirectory(processVars.targetPath)
-        
-        if(this.isNodeProject(processVars.targetPath)){
-            let isWorkDone = false
-            if(processVars.command){
-                const processResult = this.logProcessAndExecuteCommand(processVars.command)
-                isWorkDone = this.isWorkDone(processResult)
-            }
-
-            if(!isWorkDone){
-                console.log(chalk.green('Process Complete.Packages installation Success'))
-                return true
-            } else{
-                console.log(chalk.white('Process Complete.No package installed'))
-                return false   
-            }
-        } else {
-            console.log(chalk.yellow(
-                'Unknown Project Specification.Packages installation skipped')
-            )
+    public installPackages = (command: string|false): boolean =>{
+        let isWorkDone = false
+        if(command){
+            const processResult = this.logProcessAndExecuteCommand(command)
+            isWorkDone = this.isWorkDone(processResult)
+        } else{
             return false
         }
+
+        if(!isWorkDone){
+            console.log(chalk.green('Process Complete.Packages installation Success'))
+            return true
+        } else{
+            console.log(chalk.white('Process Complete.No package installed'))
+            return false   
+        }     
     }
 
-    private changeDirectory = (path: string): void =>{
+    public changeDirectory = (path: string): void =>{
         shell.cd(path)
-    }
-    private isNodeProject = (targetPath: string):boolean => {
-        const config_file_path = this.project.createFullPathName(
-            targetPath, 'package.json'
-        )
-        return fs.existsSync(config_file_path)
     }
     private isWorkDone = (processResult: shell.ShellString): boolean =>{
         return processResult.code == 0
@@ -75,5 +62,9 @@ export class Shell {
             `Running ${chalk.gray(command)} command`)
         )
         return shell.exec(command)
+    }
+    public logWarning(message: string){
+        console.log(chalk.yellow(message)
+        )
     }
 }

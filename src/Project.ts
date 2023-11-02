@@ -144,4 +144,10 @@ export class Project{
     
         return options
     }
+    public isNodeProject = (targetPath: string):boolean => {
+        const config_file_path = this.createFullPathName(
+            targetPath, 'package.json'
+        )
+        return fs.existsSync(config_file_path)
+    }
 }
