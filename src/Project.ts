@@ -56,11 +56,11 @@ export class Project{
                 if(this.isFile(fileInfo.fileStats)){
                     const templateData: interfaces.TemplateData = { projectName }
                     const content: string = this.readFileContent(fileInfo.originPath)
-                    const fileContentWithTemplateData: string = this.insertTemplateData(
+                    const contentWithTemplateData: string = this.insertTemplateData(
                         content, templateData)  
 
                     this.writeFileContent(
-                        fileInfo.destinationPath, fileContentWithTemplateData)
+                        fileInfo.destinationPath, contentWithTemplateData)
 
                 } else if (this.isDirectory(fileInfo.fileStats)){
                     this.replicateTemplateDirectory(
