@@ -41,11 +41,13 @@ export class Project extends FileSys{
             if(this.fileShouldBeSkipped(filename)){
                 this.skip()
             } else {
-                const fileInfo: interfaces.FileInformation = this.getFileInformation({
+                const infoInquiryData: interfaces.FileInquiryData = {
                     templatePath, 
                     projectName, 
                     filename
-                })
+                }
+                const fileInfo: interfaces.FileInformation = this.getFileInformation(
+                    infoInquiryData)
                 
                 if(this.isFile(fileInfo.fileStats)){
                     const templateData: interfaces.TemplateData = { projectName }
