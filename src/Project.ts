@@ -103,7 +103,6 @@ export class Project{
     private getFileStats = (filePath: string): fs.Stats =>{
         return fs.statSync(filePath)
     }
-    
     private insertTemplateData = (
         content: string, data: interfaces.TemplateData
     ): string =>{

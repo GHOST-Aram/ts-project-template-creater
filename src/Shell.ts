@@ -65,17 +65,17 @@ export class Shell {
         return shell.exec(command)
     }
     private logProcess = (message: string) =>{
-        console.log(chalk.blue(message)
+        shell.echo(chalk.blue(message)
         )
     }
     private logSuccess = (message: String) =>{
-        console.log(chalk.green(message))
+        shell.echo(chalk.green(message))
     }
     private logMessage = (message: string) =>{
-        console.log(chalk.white(message))
+        shell.echo(chalk.white(message))
     }
     public logWarning(message: string){
-        console.log(chalk.yellow(message)
+        shell.echo(chalk.yellow(message)
         )
     }
 
