@@ -2,11 +2,11 @@ import chalk from 'chalk'
 import path from 'path'
 import * as ejs from 'ejs'
 import * as interfaces from './interfaces'
-import { FileSys } from './FileSystem'
+import { FileSystemWorker } from './FSWorker'
 
 
 
-export class Project extends FileSys{
+export class Project extends FileSystemWorker{
     private  FILES_TO_SKIP: string[]
     private CURRENT_DIRECTORY: string
 

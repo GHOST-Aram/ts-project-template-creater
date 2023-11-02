@@ -1,5 +1,5 @@
 import fs from 'fs'
-export class FileSys{
+export class FileSystemWorker{
     public createDirectory = (path: string) : void =>{
         fs.mkdirSync(path)
     }
