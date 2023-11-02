@@ -55,14 +55,16 @@ export class Project{
                 
                 if(this.isFile(fileInfo.fileStats)){
                     const templateData: interfaces.TemplateData = { projectName }
+                    const content: string = this.readFileContent(fileInfo.originPath)
+                    const fileContentWithTemplateData: string = this.insertTemplateData(
+                        content, templateData)  
 
-                    const fileContentWithTemplateData = this.readFileAndInsertTemplateData(
-                        fileInfo.originPath, templateData
-                    )  
-                    this.writeFileContent(fileInfo.destinationPath, fileContentWithTemplateData)
+                    this.writeFileContent(
+                        fileInfo.destinationPath, fileContentWithTemplateData)
 
                 } else if (this.isDirectory(fileInfo.fileStats)){
-                    this.replicateTemplateDirectory(fileInfo.originPath, fileInfo.destinationPath)
+                    this.replicateTemplateDirectory(
+                        fileInfo.originPath, fileInfo.destinationPath)
                 }
             }
         })
@@ -85,7 +87,6 @@ export class Project{
         )
         const fileStats = this.getFileStats(originFilePath)
 
-        
         const destinationFilePath = this.createFullPathName(
             data.projectName,data.filename, this.CURRENT_DIRECTORY
         )
@@ -99,6 +100,26 @@ export class Project{
     private getTemplateFilesNames = (dirPath: string): string[] =>{
         return fs.readdirSync(dirPath)
     }
+    private getFileStats = (filePath: string): fs.Stats =>{
+        return fs.statSync(filePath)
+    }
+    
+    private insertTemplateData = (
+        content: string, data: interfaces.TemplateData
+    ): string =>{
+        const contentWithTemplateData = ejs.render(content, data)
+
+        return contentWithTemplateData
+    }
+    private readFileContent = (originPath: string): string =>{
+        return fs.readFileSync(originPath, 'utf8')
+    } 
+    private writeFileContent = (filePath: string, content: string): void =>{
+        fs.writeFileSync(filePath, content, 'utf8')
+    }
+    private skip = () =>{
+        return
+    }
     
     public createFullPathName = (
             subdirPath: string, filename: string, rootDirPath?:string
@@ -106,29 +127,8 @@ export class Project{
             if(rootDirPath)
                 return path.join(rootDirPath, subdirPath, filename)
             return path.join( subdirPath, filename)
-     }
-    
-     private getFileStats = (filePath: string): fs.Stats =>{
-        return fs.statSync(filePath)
-     }
-    
-    private writeFileContent = (filePath: string, content: string): void =>{
-        fs.writeFileSync(filePath, content, 'utf8')
     }
     
-    
-    private skip = () =>{
-        return
-    }
-    private readFileAndInsertTemplateData = (
-        originPath: string, data: interfaces.TemplateData
-    ): string =>{
-        const content = fs.readFileSync(originPath, 'utf8')
-        const contentWithTemplateData = ejs.render(content, data)
-
-        return contentWithTemplateData
-    }
-     
     public getCliOptions = (answers: interfaces.Answer): interfaces.CliOptions =>{
         const projectCHoice = answers['template']
         const projectName = answers['name']
