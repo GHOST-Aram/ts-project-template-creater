@@ -7,9 +7,10 @@ import { cliInquirer } from './CLIInquirer'
 
 
 
-cliInquirer.inquire(configs.QUESTIONS).then(answers =>{
+cliInquirer.inquireOptions(configs.QUESTIONS).then(answers =>{
     
-    const options: CliOptions = cliInquirer.createCLIOptions(answers)
+    const options: CliOptions = cliInquirer.createCLIOptionsObject(
+        answers)
     
     const project = new Project(configs.SKIP_FILES, configs.CURRENT_DIR)
     const mkdirSuccess: boolean = project.createProjectDirectory(

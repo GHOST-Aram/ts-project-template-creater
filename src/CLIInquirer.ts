@@ -6,10 +6,10 @@ import inquirer from "inquirer"
 
 export class CLIInquirer{
 
-    public inquire = async(questions: Question[]) =>{
+    public inquireOptions = async(questions: Question[]) =>{
         return await inquirer.prompt(questions)
     }
-    public createCLIOptions = (cliArgs: Answer): CliOptions =>{
+    public createCLIOptionsObject = (cliArgs: Answer): CliOptions =>{
         const projectCHoice = cliArgs['template']
         const projectName = cliArgs['name']
         const templatePath = path.join(
