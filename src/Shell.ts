@@ -23,11 +23,11 @@ export class Shell {
 
         if(isWorkDone){
             this.logSuccess(
-                'Process Complete.Packages installation Success'
+                'Process Complete.Happy Coding'
             )
             return true
         } else{
-            this.logMessage('Process Complete.No package installed')
+            this.logMessage('Process broken before completion')
             return false   
         }     
     }
