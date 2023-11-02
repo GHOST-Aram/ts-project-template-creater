@@ -41,7 +41,7 @@ export class Project{
     public replicateTemplateDirectory = (
             templatePath: string, projectName: string
         ): void =>{
-        const templateFilesNames = this.getTemplateFilesNames(templatePath)
+        const templateFilesNames: string[] = this.getTemplateFilesNames(templatePath)
 
         templateFilesNames.forEach(filename => {
             if(this.fileShouldBeSkipped(filename)){
@@ -79,10 +79,10 @@ export class Project{
     private fileShouldBeSkipped = (file: string): boolean =>{
         return this.FILES_TO_SKIP.includes(file)
     }
-    private getFileInformation = ( data: FileInquiryData    ): FileInformation =>{
+    private getFileInformation = (data: FileInquiryData): FileInformation =>{
         const originFilePath = this.createFullPathName(
             data.templatePath, data.filename
-            )
+        )
         const fileStats = this.getFileStats(originFilePath)
 
         

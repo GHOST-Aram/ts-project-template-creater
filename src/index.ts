@@ -19,12 +19,11 @@ cliInquirer.inquire(configs.QUESTIONS).then(answers =>{
         project.replicateTemplateDirectory(
             options.templatePath, 
             options.projectName
-            )
-        } else {
-            return
+        )
+    } else {
+        return
     }
     
-
     const shell = new Shell(project)
     const command = shell.getCommand(options.projectName)
     const processVars: ProcessVariables = {
