@@ -27,7 +27,6 @@ cliInquirer.inquire(configs.QUESTIONS).then(answers =>{
     const shell = new Shell(project)
     const command = shell.getInstallationCommand(options.projectName)
     
-    
     if(project.isNodeProject(options.targetPath)){
         shell.changeDirectory(options.targetPath)
         shell.installPackages(command)
@@ -36,7 +35,7 @@ cliInquirer.inquire(configs.QUESTIONS).then(answers =>{
             'Unknown Project Specification.Packages installation skipped'
         )
     }
-    
+
     return
 }).catch(error => console.log(
     'Message: ', error.message,

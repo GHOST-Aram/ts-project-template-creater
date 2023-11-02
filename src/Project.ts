@@ -2,7 +2,7 @@ import fs from 'fs'
 import chalk from 'chalk'
 import path from 'path'
 import * as ejs from 'ejs'
-import { Answer, CliOptions, FileInformation, FileInquiryData, TemplateData } from './interfaces'
+import * as interfaces from './interfaces'
 
 
 
@@ -47,17 +47,14 @@ export class Project{
             if(this.fileShouldBeSkipped(filename)){
                 this.skip()
             } else {
-                const inquiryData: FileInquiryData =  {
+                const fileInfo: interfaces.FileInformation = this.getFileInformation({
                     templatePath, 
                     projectName, 
                     filename
-                }
-                const fileInfo: FileInformation = this.getFileInformation(
-                    inquiryData
-                )
+                })
                 
                 if(this.isFile(fileInfo.fileStats)){
-                    const templateData: TemplateData = { projectName }
+                    const templateData: interfaces.TemplateData = { projectName }
 
                     const fileContentWithTemplateData = this.readFileAndInsertTemplateData(
                         fileInfo.originPath, templateData
@@ -79,7 +76,10 @@ export class Project{
     private fileShouldBeSkipped = (file: string): boolean =>{
         return this.FILES_TO_SKIP.includes(file)
     }
-    private getFileInformation = (data: FileInquiryData): FileInformation =>{
+    private getFileInformation = (
+            data: interfaces.FileInquiryData
+        ): interfaces.FileInformation =>{
+
         const originFilePath = this.createFullPathName(
             data.templatePath, data.filename
         )
@@ -121,7 +121,7 @@ export class Project{
         return
     }
     private readFileAndInsertTemplateData = (
-        originPath: string, data: TemplateData
+        originPath: string, data: interfaces.TemplateData
     ): string =>{
         const content = fs.readFileSync(originPath, 'utf8')
         const contentWithTemplateData = ejs.render(content, data)
@@ -129,13 +129,13 @@ export class Project{
         return contentWithTemplateData
     }
      
-    public getCliOptions = (answers: Answer): CliOptions =>{
+    public getCliOptions = (answers: interfaces.Answer): interfaces.CliOptions =>{
         const projectCHoice = answers['template']
         const projectName = answers['name']
         const templatePath = path.join(__dirname, 'templates', projectCHoice)
         const targetPath = path.join(this.CURRENT_DIRECTORY, projectName)
         
-        const options: CliOptions = {
+        const options: interfaces.CliOptions = {
             projectName,
             templateName: projectCHoice,
             templatePath,
