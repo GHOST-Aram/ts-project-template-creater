@@ -1,16 +1,17 @@
-import fs from 'fs'
 import chalk from 'chalk'
 import path from 'path'
 import * as ejs from 'ejs'
 import * as interfaces from './interfaces'
+import { FileSys } from './FileSystem'
 
 
 
-export class Project{
+export class Project extends FileSys{
     private  FILES_TO_SKIP: string[]
     private CURRENT_DIRECTORY: string
 
     constructor(filesToSkip: string[], currentDirectory: string){
+        super()
         this.CURRENT_DIRECTORY = currentDirectory
         this.FILES_TO_SKIP = filesToSkip
     }
@@ -25,13 +26,6 @@ export class Project{
             return true
         } 
     
-    }
-    
-    private createDirectory = (path: string) : void =>{
-        fs.mkdirSync(path)
-    }
-    private folderExists = (path: string): boolean =>{
-        return fs.existsSync(path)
     }
     
     private logErrorMessage = (message: string): void =>{
@@ -69,12 +63,7 @@ export class Project{
             }
         })
     }
-    private isDirectory = (fileStats: fs.Stats): boolean =>{
-        return fileStats.isDirectory()
-    }
-    private isFile = (fileStats: fs.Stats): boolean =>{
-        return fileStats.isFile()
-    }
+    
     private fileShouldBeSkipped = (file: string): boolean =>{
         return this.FILES_TO_SKIP.includes(file)
     }
@@ -97,25 +86,15 @@ export class Project{
             destinationPath: destinationFilePath
         })
     }
-    private getTemplateFilesNames = (dirPath: string): string[] =>{
-        return fs.readdirSync(dirPath)
-    }
-    private getFileStats = (filePath: string): fs.Stats =>{
-        return fs.statSync(filePath)
-    }
+    
     private insertTemplateData = (
         content: string, data: interfaces.TemplateData
-    ): string =>{
-        const contentWithTemplateData = ejs.render(content, data)
-
-        return contentWithTemplateData
+        ): string =>{
+            const contentWithTemplateData = ejs.render(content, data)
+            
+            return contentWithTemplateData
     }
-    private readFileContent = (originPath: string): string =>{
-        return fs.readFileSync(originPath, 'utf8')
-    } 
-    private writeFileContent = (filePath: string, content: string): void =>{
-        fs.writeFileSync(filePath, content, 'utf8')
-    }
+    
     private skip = () =>{
         return
     }
@@ -147,6 +126,6 @@ export class Project{
         const config_file_path = this.createFullPathName(
             targetPath, 'package.json'
         )
-        return fs.existsSync(config_file_path)
+        return this.folderExists(config_file_path)
     }
 }
