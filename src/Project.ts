@@ -124,7 +124,7 @@ export class Project extends FileSys{
     
         return options
     }
-    public getInstallationCommand = (projectPath: string): (string | false) => {
+    public selectInstallationCommand = (projectPath: string): (string | false) => {
         if(this.isNpmPackage(projectPath))
             return 'npm install'
         if(this.isYarnPackage(projectPath)){
